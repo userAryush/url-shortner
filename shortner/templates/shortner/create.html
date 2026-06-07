@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Create Short URL{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Create Short URL</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            <input 
+                                type="{{ field.field.widget.input_type }}" 
+                                name="{{ field.html_name }}"
+                                class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                value="{{ field.value|default:'' }}"
+                                {% if not field.field.required %}placeholder="Optional"{% endif %}
+                            >
+                            {% for error in field.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success w-100">Shorten URL</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
