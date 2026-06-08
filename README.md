@@ -38,7 +38,7 @@ A full-featured URL shortening web application built with Django. Users can regi
 ->> Clone repository
 
 ```bash
-git clone https://github.com/Mandip698/Project_5CS024.git
+git clone git@github.com:userAryush/url-shortner.git
 ```
 
 ->> Create a Virtual environment using
