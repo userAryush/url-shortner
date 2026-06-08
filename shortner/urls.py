@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import dashboard_view, create_url_view, edit_url_view, delete_url_view, redirect_view
+from .views import dashboard_view, create_url_view, edit_url_view, delete_url_view, redirect_view, qr_code_view
 
 urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
@@ -7,4 +7,5 @@ urlpatterns = [
     path('edit/<uuid:pk>/', edit_url_view, name='edit_url'),
     path('delete/<uuid:pk>/', delete_url_view, name='delete_url'),
     path('redirect/<str:short_key>/', redirect_view, name='redirect'),
+    path('qr/<uuid:pk>/', qr_code_view, name='qr_code'),
 ]

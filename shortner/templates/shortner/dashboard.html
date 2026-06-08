@@ -37,6 +37,7 @@
                     <td>{{ url.created_at|date:"M d, Y" }}</td>
                     <td>{{ url.expires_at|date:"M d, Y"|default:"Never" }}</td>
                     <td>
+                        <a href="{% url 'qr_code' url.pk %}" class="btn btn-sm btn-info">QR</a>
                         <a href="{% url 'edit_url' url.pk %}" class="btn btn-sm btn-warning">Edit</a>
                         <form method="POST" action="{% url 'delete_url' url.pk %}" style="display:inline;">
                             {% csrf_token %}

@@ -4,13 +4,13 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .models import ShortURL
 from .forms import URLCreateForm, URLEditForm
-from .utils import generate_short_key
+from .utils import generate_short_key, generate_qr_code
 
 @login_required  
 def dashboard_view(request):
     # fetch only current user's URLs
     urls = ShortURL.objects.filter(user=request.user)
-    return render(request, 'shortener/dashboard.html', {'urls': urls})
+    return render(request, 'shortner/dashboard.html', {'urls': urls})
 
 
 @login_required
@@ -24,7 +24,7 @@ def create_url_view(request):
             if custom_key:
                 if ShortURL.objects.filter(short_key=custom_key).exists():
                     form.add_error('custom_key', 'This key is already taken')
-                    return render(request, 'shortener/create.html', {'form': form})
+                    return render(request, 'shortner/create.html', {'form': form})
                 url.short_key = custom_key
             else:
                 url.short_key = generate_short_key()
@@ -33,7 +33,7 @@ def create_url_view(request):
             return redirect('dashboard')
     else:
         form = URLCreateForm()
-    return render(request, 'shortener/create.html', {'form': form})
+    return render(request, 'shortner/create.html', {'form': form})
  
  
 @login_required
@@ -47,13 +47,13 @@ def edit_url_view(request, pk):
             if custom_key:
                 if ShortURL.objects.filter(short_key=custom_key).exclude(pk=url.pk).exists():
                     form.add_error('custom_key', 'This key is already taken')
-                    return render(request, 'shortener/edit.html', {'form': form})
+                    return render(request, 'shortner/edit.html', {'form': form})
                 url.short_key = custom_key
             url.save()
             return redirect('dashboard')
     else:
         form = URLEditForm(instance=url)
-    return render(request, 'shortener/edit.html', {'form': form})
+    return render(request, 'shortner/edit.html', {'form': form})
  
  
 @login_required
@@ -72,3 +72,13 @@ def redirect_view(request, short_key):
     url.click_count += 1
     url.save()
     return HttpResponseRedirect(url.original_url)
+
+@login_required
+def qr_code_view(request, pk):
+    url = get_object_or_404(ShortURL, pk=pk, user=request.user)
+    short_url = request.build_absolute_uri(f'/{url.short_key}/')
+    qr_image = generate_qr_code(short_url)
+    return render(request, 'shortner/qr_code.html', {
+        'url': url,
+        'qr_image': qr_image
+    })
